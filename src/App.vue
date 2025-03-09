@@ -1,23 +1,12 @@
 <template>
   <v-app>
     <v-main>
-      <HelloWorld/>
+      <RouterView/>
     </v-main>
   </v-app>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup>
 
-export default {
-  name: 'App',
-
-  components: {
-    HelloWorld,
-  },
-
-  data: () => ({
-    //
-  }),
-}
+import { RouterView } from "vue-router"
 </script>
