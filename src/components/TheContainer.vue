@@ -1,12 +1,22 @@
+<script setup>
+import { ref } from 'vue';
+import BaseSideBar from './sideBar/BaseSideBar.vue';
+
+const isDrawerOpen = ref(true);
+
+const toggleDrawer = () => {
+  isDrawerOpen.value = !isDrawerOpen.value;
+};
+</script>
+
 <template>
   <div class="page-background flex items-start">
-    <BaseSidebar />
-
+    <BaseSideBar :is-drawer-open="isDrawerOpen" @toggle-drawer="toggleDrawer" />
+    <v-app-bar-nav-icon position="fixed" @click="toggleDrawer" color="white"></v-app-bar-nav-icon>
+    <v-app-bar-title></v-app-bar-title>
     <main :class="`main bg-gray-100 w-full`">
-      <BaseHeader />
-
       <div class="base-padding bg-gray-100 p-6 h-full">
-        <div class="page bg-white rounded-md">
+        <div>
           <router-view />
         </div>
       </div>
@@ -14,20 +24,27 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style>
 .page-background {
+  background-color: #212121;
   height: 100vh;
 }
+
 .main {
   transition: all ease-in-out 0.4s;
   height: 100vh;
-  margin-left: 260px;
-  @media (max-width: 1024px) {
-    margin-left: 0;
-  }
+  background-color: #1e1e1e;
+  padding-top: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .page {
   height: 100%;
+}
+
+.navbar {
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.01);
+  border: none;
 }
 </style>

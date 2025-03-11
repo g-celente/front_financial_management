@@ -1,22 +1,21 @@
 import { createRouter, createWebHistory } from "vue-router";
-import beforeEach from "./beforeEach";
+//import beforeEach from "./beforeEach";
 
-//import TheContainer from "../components/TheContainer.vue";
+import TheContainer from "../components/TheContainer.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: "/login",
+      path: "/",
       name: "login",
-      component: () => import("../views/LoginView.vue"),
+      component: () => import("../views/auth/LoginView.vue"),
     },
     {
       path: "/register",
       name: "Cadastro",
-      component: () => import("../views/LoginView.vue"),
+      component: () => import("../views/auth/LoginView.vue"),
     },
-    /*
     {
       path: "/",
       component: TheContainer,
@@ -25,15 +24,24 @@ const router = createRouter({
         {
           path: "/home",
           name: "Logado",
-          component: () => import("../views/LoginView.vue"),
+          component: () => import("../views/HomeView.vue"),
         },
+        {
+          path: "/saidas",
+          name: "Saidas",
+          component: () => import("../views/SaidasView.vue")
+        },
+        {
+          path: "/entradas",
+          name: "Entradas",
+          component: () => import("../views/EntradasView.vue")
+        }
       ],
     },
     {
       path: "/:catchAll(.*)*",
-      component: () => import("../views/LoginView.vue"),
+      component: () => import("../views/auth/LoginView.vue"),
     },
-    */
   ],
 
   scrollBehavior() {
@@ -42,6 +50,6 @@ const router = createRouter({
  
 });
 
-router.beforeEach(beforeEach);
+//router.beforeEach(beforeEach);
 
 export default router;

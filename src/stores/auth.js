@@ -1,41 +1,48 @@
 import { defineStore } from "pinia";
-import api from "@/api";
-import { ref } from "vue";
+import api from "@/api"
+import { ref } from "vue"
 
-export const useAuthStore = defineStore("auth", () => {
-  const user = ref({});
 
-  async function signIn(payload) {
-    try {
-      const response = await api.auth.signIn(payload);
+export const userStore = defineStore("auth", () => {
+    const user = ref();
 
-      return response.data;
-    } catch (error) {
-      console.log(error);
+    async function userLogin(payload) {
+
+        try {
+            const response = await api.auth.signIn(payload) 
+
+            return response.data
+        } catch (e) {
+            console.log(e)
+        }
+
     }
-  }
 
-  async function signUp(payload) {
-    try {
-      const response = await api.auth.signUp(payload);
-      return response.data;
-    } catch (error) {
-      console.log(error);
+    async function userRegister(payload) {
+      try {
+
+        const response = await api.auth.signUp(payload)
+
+        return response.data
+      } catch (e) {
+        console.log(e)
+      }
     }
-  }
-  async function logout() {
-    try {
-      const response = await api.auth.logout();
-      user.value = response.data;
-      return response.data;
-    } catch (error) {
-        console.log(error)
+
+    async function logout() {
+      try {
+        const response = await api.auth.logout()
+
+        return response.data
+      } catch (e) {
+        console.log(e)
+      }
     }
-  }
-  return { 
-    user, 
-    signIn, 
-    signUp, 
-    logout
-  };
-});
+
+    return {
+        user,
+        userLogin,
+        userRegister,
+        logout
+    }
+})

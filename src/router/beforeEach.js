@@ -13,7 +13,7 @@ export default async (to) => {
   
     if (to.meta.requiresAuth) {
       if (!token) {
-        return { name: "login" };
+        return { path: "/" };
       }
   
       return true;
