@@ -36,10 +36,10 @@ import { defineProps, defineEmits } from 'vue';
 import { ref } from 'vue';
 
 const headers = ref([
-    { key: 'name', label: 'Name' },
-    { key: 'email', label: 'Email' },
-    { key: 'position', label: 'Position' },
-    { key: 'salary', label: 'Salary' }
+    { key: 'descricao', label: 'Descrição' },
+    { key: 'categoria', label: 'Categoria' },
+    { key: 'valor', label: 'Valor' },
+    { key: 'data', label: 'Data' },
 ]);
 
 // Definição das propriedades que o componente aceita

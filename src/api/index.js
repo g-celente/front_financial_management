@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import AuthService from "./services/auth";
+import FinancialService from "./services/financial"
 
 const baseURL = "http://127.0.0.1:8000/api/";
 
@@ -42,7 +43,7 @@ httpClient.interceptors.response.use(
           return axios(originalRequest);
         } catch (error) {
           localStorage.removeItem("token-auth");
-          window.location.href = "/login";
+          window.location.href = "/";
           return Promise.reject(error);
         } finally {
           isRefreshing = false;
@@ -59,4 +60,5 @@ httpClient.interceptors.response.use(
 
 export default {
   auth: AuthService(httpClient),
+  financial: FinancialService(httpClient)
 };

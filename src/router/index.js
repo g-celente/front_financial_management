@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-//import beforeEach from "./beforeEach";
+import beforeEach from "./beforeEach";
 
 import TheContainer from "../components/TheContainer.vue";
 
@@ -50,6 +50,6 @@ const router = createRouter({
  
 });
 
-//router.beforeEach(beforeEach);
+router.beforeEach(beforeEach);
 
 export default router;
