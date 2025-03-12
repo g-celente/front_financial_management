@@ -17,15 +17,14 @@ npm install
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 4 - API Backend
+A API que o sistema utiliza está hospedada em um servidor EC2. A URL da API é: 
+```
+http://ec2-xx-xxx-xxx-xx.compute-1.amazonaws.com/api/
+````
+**Importante:** Neste momento, a API não está configurada com um certificado SSL. Portanto, não é necessário configurar o backend localmente para rodar o projeto frontend. O sistema funcionará diretamente com a API hospedada.
+
+### 5 - Compilar e minificar para produção
 ```
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
