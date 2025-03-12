@@ -33,22 +33,13 @@
 
 <script setup>
 import { defineProps, defineEmits } from 'vue';
-import { ref } from 'vue';
 
-const headers = ref([
-    { key: 'descricao', label: 'Descrição' },
-    { key: 'categoria', label: 'Categoria' },
-    { key: 'valor', label: 'Valor' },
-    { key: 'data', label: 'Data' },
-]);
-
-// Definição das propriedades que o componente aceita
 defineProps({
+    headers: Array,
     rows: Array,
     caption: String
 });
 
-// Define os eventos emitidos
 defineEmits(['edit', 'delete']);
 </script>
 

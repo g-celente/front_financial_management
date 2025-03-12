@@ -1,4 +1,3 @@
-
 <script setup>
 import TheTable from '@/components/TheTable.vue';
 import { ref } from 'vue';
@@ -8,6 +7,8 @@ import BaseLoading from '@/components/loading/BaseLoading.vue';
 import BaseExclusaoModal from '@/components/modal/BaseExclusaoModal.vue';
 import { useFinancialStore } from '@/stores/financial';
 import BaseEditModal from '@/components/modal/BaseEditModal.vue';
+import BaseAlertError from '@/components/Alert/BaseAlertError.vue';
+import BaseAlertSuccess from '@/components/Alert/BaseAlertSuccess.vue';
 
 const store = useFinancialStore();
 const showEditModal = ref(false);
@@ -16,6 +17,16 @@ const modalType = ref("entrada");
 const loading = ref(true);
 const selectedRow = ref(null);
 const showBaseExclusaoModal = ref(false);
+const success = ref(false)
+const error = ref(false)
+const baseText = ref(false)
+
+const headersTable = ref([
+    { key: 'descricao', label: 'Descrição' },
+    { key: 'categoria', label: 'Categoria' },
+    { key: 'valor', label: 'Valor' },
+    { key: 'data', label: 'Data' },
+]);
 
 const openModal = (type, row = null) => {
     if (row) {
@@ -29,11 +40,27 @@ const openModal = (type, row = null) => {
     }
 };
 
-const saveMovimentacao = async (data) => {
-    if (selectedRow.value?.id) { 
-        await store.updateMovimentacao(selectedRow.value, data);
+const handleResponse = (response, successMsg, errorMsg) => {
+    if (response) {
+        success.value = true;
+        baseText.value = successMsg;
     } else {
-        await store.createMovimentacao(data);
+        error.value = true;
+        baseText.value = errorMsg;
+    }
+    setTimeout(() => {
+        success.value = false;
+        error.value = false;
+    }, 3000);
+};
+
+const saveMovimentacao = async (data) => {
+    if (selectedRow.value?.id) {
+        const response = await store.updateMovimentacao(selectedRow.value, data);
+        handleResponse(response, "Saída Editada Com Sucesso", "Erro ao Editar Saída")
+    } else {
+        const response = await store.createMovimentacao(data);
+        handleResponse(response, "Saída Criada Com Sucesso", "Erro ao Criar Saída")
     }
     await getSaidasByUser();
     showModal.value = false;
@@ -66,11 +93,15 @@ const deleteRow = (row) => {
 
 const confirmDelete = async () => {
     if (selectedRow.value) {
-        console.log(selectedRow)
-        await store.deleteMovimentacao(selectedRow.value);
-        await getSaidasByUser();
+        try {
+            const response = await store.deleteMovimentacao(selectedRow.value);
+            rows.value = rows.value.filter(item => item.id !== selectedRow.value);
+            handleResponse(response, "Saída Deletada Com Sucesso", "Erro ao Deletar Saída")
+            showBaseExclusaoModal.value = false;
+        } catch (error) {
+            console.error("Erro ao excluir movimentação:", error);
+        }
     }
-    showBaseExclusaoModal.value = false;
 };
 
 const cancelDelete = () => {
@@ -96,7 +127,7 @@ onMounted(() => {
         </v-row>
         <v-divider class="mb-4" color="white"></v-divider>
 
-        <TheTable :rows="rows" @edit="editRow" @delete="deleteRow" />
+        <TheTable :rows="rows" @edit="editRow" @delete="deleteRow" :headers="headersTable" />
 
         <FinancialModal :show="showModal" :type="modalType" @close="showModal = false" @save="saveMovimentacao" />
 
@@ -104,6 +135,10 @@ onMounted(() => {
             @save="saveMovimentacao" />
 
         <BaseExclusaoModal v-model="showBaseExclusaoModal" @confirm="confirmDelete" @cancel="cancelDelete" />
+
+        <BaseAlertError class="base-error" v-if="error" type="error" :text="baseText" />
+
+        <BaseAlertSuccess v-if="success" :text="baseText" />
     </v-container>
     <v-container v-else>
         <v-col class="loading">
@@ -129,5 +164,4 @@ h2 {
     align-items: center;
     justify-content: center;
 }
-
 </style>

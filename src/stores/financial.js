@@ -35,8 +35,10 @@ export const useFinancialStore = defineStore("financial", () => {
 
     async function deleteMovimentacao(id) {
         try {
-            await api.financial.deleteMovimentacao(id);
+            const response = await api.financial.deleteMovimentacao(id);
             movimentacoes.value = movimentacoes.value.filter(item => item.id !== id);
+
+            return response.data
         } catch (e) {
             console.error("Erro ao excluir movimentação:", e);
         }

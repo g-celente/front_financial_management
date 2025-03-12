@@ -1,8 +1,12 @@
 <script setup>
 import { ref, watch, defineEmits, defineProps, computed } from 'vue';
 import { useFinancialStore } from '@/stores/financial';
+import { useCategoriesStore } from '@/stores/categorias';
+import BaseAlertError from '@/components/Alert/BaseAlertError.vue';
+import BaseAlertSuccess from '@/components/Alert/BaseAlertSuccess.vue';
 
-const store = useFinancialStore();
+const financialStore = useFinancialStore();
+const categoryStore = useCategoriesStore();
 
 const props = defineProps({
     show: Boolean,
@@ -12,34 +16,63 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'save']);
 
+const isVisible = computed({
+    get: () => props.show,
+    set: (val) => emit('close', val)
+});
+
+const categories = ref([]);
+const success = ref(false);
+const error = ref(false);
+const baseError = ref('');
+const baseSuccess = ref('');
+
 const formData = ref({
     id: null,
     data: '',
     tipo: props.type,
     valor: '',
     categoria: '',
+    categoria_id: '',
     descricao: ''
-});
-
-const isVisible = computed({
-    get: () => props.show,
-    set: (val) => emit('close', val)
 });
 
 const loadData = async (id) => {
     if (!id) return;
     try {
-        const response = await store.getMovimentacaoById(id);
-        formData.value = { ...response, tipo: props.type };
+        const response = await financialStore.getMovimentacaoById(id);
+        formData.value = {
+            ...response,
+            tipo: props.type,
+            categoria_id: response.categoria_id || '',
+            categoria: response.categoria || ''
+        };
     } catch (error) {
+        baseError.value = 'Erro ao carregar os dados da movimentação.';
+        error.value = true;
+        setTimeout(() => error.value = false, 3000);
         console.error("Erro ao carregar os dados da movimentação:", error);
     }
 };
 
-// Observa quando o modal é aberto para carregar os dados corretamente
+const fetchCategories = async () => {
+    try {
+        const response = await categoryStore.getAllCategory();
+        categories.value = response;
+    } catch (error) {
+        baseError.value = 'Erro ao buscar categorias.';
+        error.value = true;
+        setTimeout(() => error.value = false, 3000);
+        console.error("Erro ao buscar categorias:", error);
+    }
+};
+
 watch(() => props.show, async (newVal) => {
-    if (newVal && props.row) {
-        await loadData(props.row.id);
+    if (newVal) {
+        await fetchCategories();
+        if (props.row) {
+            await loadData(props.row.id);
+        }
     }
 });
 
@@ -49,13 +82,28 @@ watch(() => props.row, async (newRow) => {
     }
 });
 
+watch(() => props.type, (newVal) => {
+    formData.value.tipo = newVal;
+});
+
 const save = async () => {
-    if (formData.value.id) {
-        await store.updateMovimentacao(formData.value.id, formData.value);
+    try {
+        if (formData.value.id) {
+            await financialStore.updateMovimentacao(formData.value.id, formData.value);
+            baseSuccess.value = 'Movimentação atualizada com sucesso!';
+            success.value = true;
+            setTimeout(() => success.value = false, 3000);
+        }
+        emit('save');
+        emit('close', false);
+    } catch (error) {
+        baseError.value = 'Erro ao salvar a movimentação.';
+        error.value = true;
+        setTimeout(() => error.value = false, 3000);
+        console.error("Erro ao salvar a movimentação:", error);
     }
-    emit('save');
-    emit('close', false);
 };
+
 </script>
 
 <template>
@@ -69,7 +117,12 @@ const save = async () => {
                     <v-text-field v-model="formData.data" label="Data" type="date" required></v-text-field>
                     <v-text-field v-model="formData.valor" label="Valor" type="number" step="0.01"
                         required></v-text-field>
-                    <v-text-field v-model="formData.categoria" label="Categoria" required></v-text-field>
+
+                    <v-select v-model="formData.categoria_id" :items="categories" item-title="nome" item-value="id"
+                        label="Categoria" required
+                        @update:model-value="formData.categoria = categories.find(c => c.id === formData.categoria_id)?.nome">
+                    </v-select>
+
                     <v-textarea v-model="formData.descricao" label="Descrição"></v-textarea>
                 </v-form>
             </v-card-text>
@@ -79,8 +132,11 @@ const save = async () => {
             </v-card-actions>
         </v-card>
     </v-dialog>
-</template>
 
+    <!-- Exibindo alertas de erro e sucesso -->
+    <BaseAlertError v-if="error" :text="baseError" type="error" />
+    <BaseAlertSuccess v-if="success" :text="baseSuccess" />
+</template>
 
 <style scoped>
 .v-dialog {

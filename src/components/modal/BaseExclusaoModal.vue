@@ -2,13 +2,12 @@
 import { defineProps, defineEmits, ref } from 'vue';
 
 const props = defineProps({
-    show: Boolean, // Controla a exibição da modal
+    show: Boolean,
 });
 
 const emit = defineEmits(['confirm', 'cancel']);
-const showModal = ref(props.show); // Cria uma variável local para controlar a visibilidade da modal
+const showModal = ref(props.show);
 
-// Emitir eventos corretamente
 const handleConfirm = () => {
     emit('confirm');
 };
