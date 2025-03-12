@@ -18,7 +18,6 @@ const items = [
 ];
 
 const userItems = [
-  { text: 'Profile', icon: 'mdi-account', route: '/profile' },
   { text: 'Logout', icon: 'mdi-logout' }
 ];
 

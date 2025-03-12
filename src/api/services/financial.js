@@ -20,6 +20,9 @@ export default (httpClient) => ({
     },
     getMovimentacaoById: async (id) => {
         return httpClient.get(`/financial/${id}`)
+    },
+    getDashboardData: async () => {
+        return httpClient.get('/dashboard')
     }
 
 

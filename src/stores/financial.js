@@ -75,6 +75,16 @@ export const useFinancialStore = defineStore("financial", () => {
         }
     }
 
+    async function getDashboardData() {
+        try {
+            const response = await api.financial.getDashboardData();
+
+            return response.data
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     return {
         movimentacoes,
         createMovimentacao,
@@ -83,6 +93,7 @@ export const useFinancialStore = defineStore("financial", () => {
         deleteMovimentacao,
         getEntradaByUser,
         getSaidaByUser,
-        getMovimentacaoById
+        getMovimentacaoById,
+        getDashboardData
     };
 });
