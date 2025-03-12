@@ -3,7 +3,7 @@ import AuthService from "./services/auth";
 import FinancialService from "./services/financial";
 import CategoryService from "./services/categorias";
 
-const baseURL = "http://127.0.0.1:8000/api/";
+const baseURL = process.env.BASE_URL;
 
 const httpClient = axios.create({ baseURL });
 
