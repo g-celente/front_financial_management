@@ -3,7 +3,7 @@ import AuthService from "./services/auth";
 import FinancialService from "./services/financial";
 import CategoryService from "./services/categorias";
 
-const baseURL = process.env.BASE_URL;
+const baseURL ="http://ec2-3-145-166-91.us-east-2.compute.amazonaws.com/api";
 
 const httpClient = axios.create({ baseURL });
 
