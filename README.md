@@ -1,11 +1,18 @@
 # front_financial_management
 
-## Project setup
+INFORMAÇÕES PARA UTILIZAR O SISTEMA
+
+## 1 - Clonar o projeto para sua máquina
+```
+git clone https://github.com/g-celente/front_financial_management.git
+```
+
+## 2 - Instalar as dependências do projeto
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 3 - Rodar o projeto localmente
 ```
 npm run serve
 ```
